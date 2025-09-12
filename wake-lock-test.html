@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Wake Lock API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 16px;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: monospace;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔋 Teste Wake Lock API</h1>
+    
+    <div id="status"></div>
+    
+    <div>
+        <button id="testWakeLock">Testar Wake Lock</button>
+        <button id="requestWakeLock">Ativar Wake Lock</button>
+        <button id="releaseWakeLock" disabled>Desativar Wake Lock</button>
+        <button id="checkStatus">Verificar Status</button>
+    </div>
+    
+    <div class="log" id="log"></div>
+    
+    <h3>Informações do Sistema:</h3>
+    <ul>
+        <li><strong>Navegador:</strong> <span id="browser"></span></li>
+        <li><strong>Versão:</strong> <span id="version"></span></li>
+        <li><strong>Plataforma:</strong> <span id="platform"></span></li>
+        <li><strong>Protocolo:</strong> <span id="protocol"></span></li>
+        <li><strong>Wake Lock API:</strong> <span id="wakeLockSupport"></span></li>
+    </ul>
+
+    <script>
+        let wakeLock = null;
+        const log = document.getElementById('log');
+        const status = document.getElementById('status');
+        
+        function addLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `<strong>[${timestamp}]</strong> ${message}`;
+            logEntry.style.color = type === 'error' ? '#dc3545' : 
+                                 type === 'success' ? '#28a745' : 
+                                 type === 'warning' ? '#ffc107' : '#17a2b8';
+            log.appendChild(logEntry);
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        function updateStatus(message, type) {
+            status.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+        
+        function detectBrowser() {
+            const userAgent = navigator.userAgent;
+            let browser = 'Desconhecido';
+            let version = 'Desconhecida';
+            
+            if (userAgent.includes('Chrome')) {
+                browser = 'Chrome';
+                version = userAgent.match(/Chrome\/(\d+)/)?.[1] || 'Desconhecida';
+            } else if (userAgent.includes('Firefox')) {
+                browser = 'Firefox';
+                version = userAgent.match(/Firefox\/(\d+)/)?.[1] || 'Desconhecida';
+            } else if (userAgent.includes('Safari')) {
+                browser = 'Safari';
+                version = userAgent.match(/Version\/(\d+)/)?.[1] || 'Desconhecida';
+            } else if (userAgent.includes('Edge')) {
+                browser = 'Edge';
+                version = userAgent.match(/Edge\/(\d+)/)?.[1] || 'Desconhecida';
+            }
+            
+            document.getElementById('browser').textContent = browser;
+            document.getElementById('version').textContent = version;
+            document.getElementById('platform').textContent = navigator.platform;
+            document.getElementById('protocol').textContent = location.protocol;
+            document.getElementById('wakeLockSupport').textContent = 'wakeLock' in navigator ? '✅ Suportado' : '❌ Não suportado';
+        }
+        
+        async function testWakeLock() {
+            addLog('🧪 Testando Wake Lock API...', 'info');
+            
+            if (!('wakeLock' in navigator)) {
+                addLog('❌ Wake Lock API não suportada neste navegador', 'error');
+                updateStatus('Wake Lock API não suportada', 'error');
+                return;
+            }
+            
+            if (location.protocol !== 'https:') {
+                addLog('❌ Wake Lock requer HTTPS', 'error');
+                updateStatus('Wake Lock requer HTTPS', 'error');
+                return;
+            }
+            
+            try {
+                addLog('📱 Solicitando Wake Lock de teste...', 'info');
+                const testLock = await navigator.wakeLock.request('screen');
+                addLog('✅ Wake Lock de teste ativado com sucesso!', 'success');
+                
+                // Liberar após 2 segundos
+                setTimeout(async () => {
+                    await testLock.release();
+                    addLog('🔄 Wake Lock de teste liberado', 'info');
+                }, 2000);
+                
+                updateStatus('Wake Lock API funcionando corretamente!', 'success');
+                
+            } catch (error) {
+                addLog(`❌ Erro no teste: ${error.message}`, 'error');
+                updateStatus(`Erro no teste: ${error.message}`, 'error');
+            }
+        }
+        
+        async function requestWakeLock() {
+            if (!('wakeLock' in navigator)) {
+                addLog('❌ Wake Lock API não suportada', 'error');
+                return;
+            }
+            
+            try {
+                addLog('🔋 Ativando Wake Lock...', 'info');
+                wakeLock = await navigator.wakeLock.request('screen');
+                
+                wakeLock.addEventListener('release', () => {
+                    addLog('🔄 Wake Lock foi liberado pelo sistema', 'warning');
+                    document.getElementById('requestWakeLock').disabled = false;
+                    document.getElementById('releaseWakeLock').disabled = true;
+                });
+                
+                addLog('✅ Wake Lock ativado com sucesso!', 'success');
+                updateStatus('Wake Lock ativo - Tela deve permanecer ligada', 'success');
+                
+                document.getElementById('requestWakeLock').disabled = true;
+                document.getElementById('releaseWakeLock').disabled = false;
+                
+            } catch (error) {
+                addLog(`❌ Erro ao ativar Wake Lock: ${error.message}`, 'error');
+                updateStatus(`Erro: ${error.message}`, 'error');
+            }
+        }
+        
+        async function releaseWakeLock() {
+            if (wakeLock) {
+                try {
+                    await wakeLock.release();
+                    wakeLock = null;
+                    addLog('🔄 Wake Lock desativado manualmente', 'info');
+                    updateStatus('Wake Lock desativado', 'info');
+                    
+                    document.getElementById('requestWakeLock').disabled = false;
+                    document.getElementById('releaseWakeLock').disabled = true;
+                    
+                } catch (error) {
+                    addLog(`❌ Erro ao desativar Wake Lock: ${error.message}`, 'error');
+                }
+            }
+        }
+        
+        function checkStatus() {
+            if (wakeLock) {
+                addLog(`📊 Status: Wake Lock ativo (released: ${wakeLock.released})`, 'info');
+            } else {
+                addLog('📊 Status: Nenhum Wake Lock ativo', 'info');
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('testWakeLock').addEventListener('click', testWakeLock);
+        document.getElementById('requestWakeLock').addEventListener('click', requestWakeLock);
+        document.getElementById('releaseWakeLock').addEventListener('click', releaseWakeLock);
+        document.getElementById('checkStatus').addEventListener('click', checkStatus);
+        
+        // Inicialização
+        detectBrowser();
+        addLog('🚀 Página de teste carregada', 'info');
+        
+        if (location.protocol !== 'https:') {
+            updateStatus('⚠️ Esta página deve ser acessada via HTTPS para testar Wake Lock', 'warning');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aplicação de cifras de violão - Encontre e visualize cifras de suas músicas favoritas">
+    <meta name="theme-color" content="#2c3e50">
+    
+    <title>Cifras de Violão</title>
+    
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Ícones para PWA -->
+    <link rel="icon" type="image/png" sizes="32x32" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">🎸 Cifras de Violão</h1>
+                <button class="menu-toggle" id="menuToggle" aria-label="Menu" type="button">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Navegação lateral -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>Repertórios</h2>
+                <button class="close-menu" id="closeMenu" aria-label="Fechar menu" type="button">×</button>
+            </div>
+            
+            <!-- Lista de repertórios -->
+            <div id="repertoriosContainer" class="repertorios-container">
+                <div class="search-container">
+                    <div class="search-row">
+                        <input type="text" id="searchInput" placeholder="Buscar repertórios..." class="search-input">
+                        <button id="refreshBtn" class="refresh-btn" title="Atualizar repertórios" type="button">🔄</button>
+                    </div>
+                </div>
+                <ul id="repertoriosList" class="repertorios-list">
+                    <!-- Lista de repertórios será carregada aqui -->
+                </ul>
+            </div>
+            
+            <!-- Lista de músicas do repertório selecionado -->
+            <div id="musicasContainer" class="musicas-container" style="display: none;">
+                <div class="repertorio-header">
+                    <button id="voltarRepertorios" class="btn-voltar">← Voltar aos repertórios</button>
+                    <h3 id="repertorioAtualNome"></h3>
+                </div>
+                <div class="search-container">
+                    <input type="text" id="searchMusicasInput" placeholder="Buscar músicas..." class="search-input">
+                </div>
+                <ul id="songList" class="song-list">
+                    <!-- Lista de músicas será carregada aqui -->
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Conteúdo principal -->
+        <main class="main-content" id="mainContent">
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-content">
+                    <h2>Bem-vindo ao Cifras de Violão!</h2>
+                    <p>Selecione um repertório da lista ao lado para visualizar as músicas disponíveis.</p>
+                    <div class="features">
+                        <div class="feature">
+                            <span class="feature-icon">📱</span>
+                            <span>Responsivo para todos os dispositivos</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🔋</span>
+                            <span>Tela sempre ativa durante a prática</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🎵</span>
+                            <span>Cifras organizadas por repertórios</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🎼</span>
+                            <span>Múltiplos repertórios disponíveis</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cifra-container" id="cifraContainer" style="display: none;">
+                <div class="cifra-header">
+                    <button class="back-button" id="backButton" type="button">← Voltar</button>
+                    <div class="song-info">
+                        <h2 id="songTitle">Título da Música</h2>
+                        <div class="song-details">
+                            <span id="songArtist" class="song-artist">Artista</span>
+                            <span id="songTonalidade" class="song-tonalidade">Tonalidade</span>
+                        </div>
+                    </div>
+                    <div class="cifra-controls">
+                        <button class="control-btn" id="toggleConfig" title="Configurar rolagem" type="button">⚙️</button>
+                        <button class="control-btn" id="toggleAutoScroll" title="Iniciar rolagem automática" type="button" onclick="if(window.app){window.app.toggleAutoScroll();} return false;">▶️</button>
+                        <button class="control-btn" id="toggleWakeLock" title="Manter tela ativa" type="button">
+                            <span id="wakeLockIcon">🔋</span>
+                        </button>
+                        <button class="control-btn" id="toggleFullscreen" title="Tela cheia" type="button">
+                            📱
+                        </button>
+                        <button class="control-btn" id="refreshCifra" title="Atualizar cifra" type="button">
+                            🔄
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Painel de configuração de rolagem -->
+                <div class="config-panel" id="configPanel" style="display:none;">
+                    <div class="config-row">
+                        <label for="inputSeconds">Tempo total (segundos)</label>
+                        <input type="number" id="inputSeconds" min="10" step="1" placeholder="Ex: 240">
+                    </div>
+                    <div class="config-actions">
+                        <button class="control-btn" id="saveConfigBtn" type="button">Salvar</button>
+                        <button class="control-btn" id="resetConfigBtn" type="button">Redefinir</button>
+                    </div>
+                    <div class="config-hint" id="configHint">As linhas serão detectadas automaticamente a partir do arquivo da música.</div>
+                </div>
+
+                <div class="cifra-content" id="cifraContent">
+                    <!-- Conteúdo da cifra será carregado aqui -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Overlay para mobile -->
+    <div class="overlay" id="overlay"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
