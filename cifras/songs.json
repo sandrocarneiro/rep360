@@ -30,8 +30,8 @@
           "id": "skank-sutilmente",
           "title": "Sutilmente",
           "artist": "Skank",
-          "tonalidade": ".",
-          "totalScrollSeconds": 210
+          "tonalidade": "D",
+          "totalScrollSeconds": 240
         },            
         {
           "id": "raul-seixas-tente-outra-vez",
@@ -67,6 +67,13 @@
           "artist": "Alceu Valença",
           "tonalidade": "F",
           "totalScrollSeconds": 290
+        },
+        {
+          "id": "tom-jobim-garota-de-ipanema",
+          "title": "Garota de Ipanema",
+          "artist": "Tom Jobim",
+          "tonalidade": "F",
+          "totalScrollSeconds": 180
         }        
       ]
     }
