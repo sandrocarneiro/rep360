@@ -75,7 +75,7 @@ class CifrasApp {
         } catch (error) {
             console.error('Erro ao carregar repertórios:', error);
             // Fallback para repertório padrão em caso de erro
-            alert('Erro ao carregar repertórios')
+            //alert('Erro ao carregar repertórios')
             this.repertorios = [
                 {
                     id: 'default',
@@ -530,11 +530,13 @@ class CifrasApp {
     }
 
     showWelcomeScreen() {
-        const welcomeScreen = document.getElementById('welcomeScreen');
+        const repertoriosMainScreen = document.getElementById('repertoriosMainScreen');
         const cifraContainer = document.getElementById('cifraContainer');
+        const songsDisplay = document.getElementById('songsDisplay');
 
-        if (welcomeScreen) welcomeScreen.style.display = 'block';
+        if (repertoriosMainScreen) repertoriosMainScreen.style.display = 'block';
         if (cifraContainer) cifraContainer.style.display = 'none';
+        if (songsDisplay) songsDisplay.remove();
 
         // Desativar Wake Lock ao voltar e parar auto-scroll
         if (this.wakeLock) {
@@ -544,9 +546,6 @@ class CifrasApp {
 
         this.currentSong = null;
         this.updateActiveSong(null);
-        
-        // Voltar aos repertórios
-        this.showWelcomeScreen();
     }
 
     updateActiveSong(songId) {
