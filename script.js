@@ -37,6 +37,7 @@ class CifrasApp {
         try {
             // Adicionar timestamp para evitar cache do navegador
             const timestamp = Date.now();
+
             const response = await fetch(`cifras/songs.json?t=${timestamp}`, {
                 cache: 'no-cache',
                 headers: {
@@ -45,11 +46,11 @@ class CifrasApp {
                     'Expires': '0'
                 }
             });
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             const data = await response.json();
             this.repertorios = data.repertorios || [];
             
@@ -74,6 +75,7 @@ class CifrasApp {
         } catch (error) {
             console.error('Erro ao carregar repertórios:', error);
             // Fallback para repertório padrão em caso de erro
+            alert('Erro ao carregar repertórios')
             this.repertorios = [
                 {
                     id: 'default',
@@ -84,7 +86,6 @@ class CifrasApp {
                             id: 'garota-de-ipanema',
                             title: 'Garota de Ipanema',
                             artist: 'Tom Jobim',
-                            filename: 'tom-jobim-garota-de-ipanema.txt',
                             totalScrollSeconds: 240
                         }
                     ]
@@ -109,13 +110,7 @@ class CifrasApp {
         const searchInput = document.getElementById('searchInput');
         searchInput?.addEventListener('input', (e) => this.filterRepertorios(e.target.value));
 
-        // Busca de músicas
-        const searchMusicasInput = document.getElementById('searchMusicasInput');
-        searchMusicasInput?.addEventListener('input', (e) => this.filterSongs(e.target.value));
 
-        // Botão voltar aos repertórios
-        const voltarRepertorios = document.getElementById('voltarRepertorios');
-        voltarRepertorios?.addEventListener('click', () => this.showRepertoriosContainer());
 
         // Botão de atualizar repertórios
         const refreshBtn = document.getElementById('refreshBtn');
@@ -213,29 +208,121 @@ class CifrasApp {
         if (!repertorio) return;
 
         this.currentRepertorio = repertorio;
-        this.showMusicasContainer(repertorio);
-        this.renderSongList(repertorio.musicas);
+        this.showSongsInMainContent(repertorio);
+        this.closeSidebar();
     }
 
-    showMusicasContainer(repertorio) {
-        const repertoriosContainer = document.getElementById('repertoriosContainer');
-        const musicasContainer = document.getElementById('musicasContainer');
-        const repertorioAtualNome = document.getElementById('repertorioAtualNome');
-
-        if (repertoriosContainer) repertoriosContainer.style.display = 'none';
-        if (musicasContainer) musicasContainer.style.display = 'block';
-        if (repertorioAtualNome) repertorioAtualNome.textContent = repertorio.nome;
-    }
-
-    showRepertoriosContainer() {
-        const repertoriosContainer = document.getElementById('repertoriosContainer');
-        const musicasContainer = document.getElementById('musicasContainer');
-
-        if (repertoriosContainer) repertoriosContainer.style.display = 'block';
-        if (musicasContainer) musicasContainer.style.display = 'none';
+    showSongsInMainContent(repertorio) {
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const cifraContainer = document.getElementById('cifraContainer');
+        const mainContent = document.getElementById('mainContent');
         
-        this.currentRepertorio = null;
+        // Hide welcome screen and cifra container
+        if (welcomeScreen) welcomeScreen.style.display = 'none';
+        if (cifraContainer) cifraContainer.style.display = 'none';
+        
+        // Create or update songs display in main content
+        this.createSongsDisplay(repertorio);
     }
+
+    createSongsDisplay(repertorio) {
+        const mainContent = document.getElementById('mainContent');
+        
+        // Remove existing songs display if it exists
+        const existingSongsDisplay = document.getElementById('songsDisplay');
+        if (existingSongsDisplay) {
+            existingSongsDisplay.remove();
+        }
+        
+        // Create new songs display
+        const songsDisplay = document.createElement('div');
+        songsDisplay.id = 'songsDisplay';
+        songsDisplay.className = 'songs-display';
+        
+        songsDisplay.innerHTML = `
+            <div class="songs-header">
+                <button class="back-to-repertorios-btn" id="backToRepertorios" type="button">← Voltar aos Repertórios</button>
+                <h2>${repertorio.nome}</h2>
+                <p class="repertorio-description">${repertorio.descricao}</p>
+            </div>
+            <div class="songs-search-container">
+                <input type="text" id="songsSearchInput" placeholder="Buscar músicas..." class="search-input">
+            </div>
+            <div class="songs-grid" id="songsGrid">
+                <!-- Songs will be rendered here -->
+            </div>
+        `;
+        
+        mainContent.appendChild(songsDisplay);
+        
+        // Add event listeners
+        this.setupSongsDisplayEvents(repertorio);
+        
+        // Render the songs
+        this.renderSongsGrid(repertorio.musicas);
+    }
+
+    setupSongsDisplayEvents(repertorio) {
+        // Back to repertórios button
+        const backBtn = document.getElementById('backToRepertorios');
+        if (backBtn) {
+            backBtn.addEventListener('click', () => {
+                this.showWelcomeScreen();
+            });
+        }
+        
+        // Search functionality
+        const searchInput = document.getElementById('songsSearchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredSongs = repertorio.musicas.filter(song => 
+                    song.title.toLowerCase().includes(searchTerm) ||
+                    song.artist.toLowerCase().includes(searchTerm)
+                );
+                this.renderSongsGrid(filteredSongs);
+            });
+        }
+    }
+
+    renderSongsGrid(musicas) {
+        const songsGrid = document.getElementById('songsGrid');
+        if (!songsGrid) return;
+        
+        songsGrid.innerHTML = '';
+        
+        musicas.forEach(song => {
+            const songCard = document.createElement('div');
+            songCard.className = 'song-card';
+            songCard.innerHTML = `
+                <div class="song-card-content">
+                    <div class="song-icon">🎵</div>
+                    <div class="song-info">
+                        <h3 class="song-title">${song.title}</h3>
+                        <p class="song-artist">${song.artist}</p>
+                        <span class="song-tonalidade">${song.tonalidade}</span>
+                    </div>
+                </div>
+            `;
+            
+            songCard.addEventListener('click', () => {
+                this.loadSong(song.id);
+            });
+            
+            songsGrid.appendChild(songCard);
+        });
+    }
+
+    showWelcomeScreen() {
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const cifraContainer = document.getElementById('cifraContainer');
+        const songsDisplay = document.getElementById('songsDisplay');
+        
+        if (welcomeScreen) welcomeScreen.style.display = 'block';
+        if (cifraContainer) cifraContainer.style.display = 'none';
+        if (songsDisplay) songsDisplay.remove();
+    }
+
 
     async refreshRepertorios() {
         const refreshBtn = document.getElementById('refreshBtn');
@@ -286,30 +373,6 @@ class CifrasApp {
         }
     }
 
-    renderSongList(musicas = null) {
-        const songList = document.getElementById('songList');
-        if (!songList) return;
-
-        const musicasToShow = musicas || this.songs;
-
-        songList.innerHTML = musicasToShow.map(song => `
-            <li class="song-item" data-song-id="${song.id}">
-                <span class="song-icon">🎵</span>
-                <div class="song-info">
-                    <div class="song-title">${song.title}</div>
-                    <div class="song-artist">${song.artist}</div>
-                </div>
-            </li>
-        `).join('');
-
-        // Adicionar eventos de clique
-        songList.querySelectorAll('.song-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const songId = item.dataset.songId;
-                this.loadSong(songId);
-            });
-        });
-    }
 
     filterRepertorios(query) {
         const repertorioItems = document.querySelectorAll('.repertorio-item');
@@ -324,18 +387,6 @@ class CifrasApp {
         });
     }
 
-    filterSongs(query) {
-        const songItems = document.querySelectorAll('.song-item');
-        const searchTerm = query.toLowerCase();
-
-        songItems.forEach(item => {
-            const title = item.querySelector('.song-title').textContent.toLowerCase();
-            const artist = item.querySelector('.song-artist').textContent.toLowerCase();
-            const matches = title.includes(searchTerm) || artist.includes(searchTerm);
-            
-            item.style.display = matches ? 'flex' : 'none';
-        });
-    }
 
     toggleConfigPanel() {
         const panel = document.getElementById('configPanel');
@@ -425,7 +476,7 @@ class CifrasApp {
         try {
             // Adicionar timestamp para evitar cache do navegador
             const timestamp = Date.now();
-            const response = await fetch(`cifras/${song.filename}?t=${timestamp}`, {
+            const response = await fetch(`cifras/${song.id}.txt?t=${timestamp}`, {
                 cache: 'no-cache',
                 headers: {
                     'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -528,7 +579,7 @@ class CifrasApp {
         this.updateActiveSong(null);
         
         // Voltar aos repertórios
-        this.showRepertoriosContainer();
+        this.showWelcomeScreen();
     }
 
     updateActiveSong(songId) {

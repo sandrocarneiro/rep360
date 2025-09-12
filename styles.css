@@ -736,3 +736,135 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* Songs Display Styles */
+.songs-display {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.songs-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.back-to-repertorios-btn {
+    background: none;
+    border: none;
+    color: #3498db;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    text-decoration: underline;
+    transition: color 0.3s;
+}
+
+.back-to-repertorios-btn:hover {
+    color: #2980b9;
+}
+
+.songs-header h2 {
+    color: #2c3e50;
+    margin: 0.5rem 0;
+    font-size: 2.5rem;
+}
+
+.repertorio-description {
+    color: #666;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.songs-search-container {
+    margin-bottom: 2rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.songs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 0;
+}
+
+.song-card {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.song-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-color: #3498db;
+}
+
+.song-card-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.song-card .song-icon {
+    font-size: 2rem;
+    color: #3498db;
+}
+
+.song-card .song-info {
+    flex: 1;
+}
+
+.song-card .song-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 0.5rem 0;
+}
+
+.song-card .song-artist {
+    color: #666;
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+}
+
+.song-card .song-tonalidade {
+    background: #3498db;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Mobile Responsiveness for Songs Display */
+@media (max-width: 768px) {
+    .songs-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .songs-header h2 {
+        font-size: 2rem;
+    }
+    
+    .song-card {
+        padding: 1rem;
+    }
+    
+    .song-card-content {
+        gap: 0.75rem;
+    }
+    
+    .song-card .song-icon {
+        font-size: 1.5rem;
+    }
+}

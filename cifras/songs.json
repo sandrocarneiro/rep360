@@ -10,7 +10,6 @@
           "title": "Não Olhe Pra Trás",
           "artist": "Capital Inicial",
           "tonalidade": "Dm",
-          "filename": "capital-inicial-nao-olhe-pra-tras.txt",
           "totalScrollSeconds": 260
         },
         {
@@ -18,7 +17,6 @@
           "title": "Vila do Sossego",
           "artist": "Zé Ramalho",
           "tonalidade": "Am",
-          "filename": "ze-ramalho-vila-do-sossego.txt",
           "totalScrollSeconds": 210
         },
         {
@@ -26,7 +24,6 @@
           "title": "Eu Ainda Gosto Dela",
           "artist": "Skank",
           "tonalidade": "Bm",
-          "filename": "skank-eu-ainda-gosto-dela.txt",
           "totalScrollSeconds": 210
         },       
         {
@@ -34,7 +31,6 @@
           "title": "Sutilmente",
           "artist": "Skank",
           "tonalidade": ".",
-          "filename": "skank-sutilmente.txt",
           "totalScrollSeconds": 210
         },            
         {
@@ -42,7 +38,6 @@
           "title": "Tente Outra Vez",
           "artist": "Zé Ramalho",
           "tonalidade": "G",
-          "filename": "raul-seixas-tente-outra-vez.txt",
           "totalScrollSeconds": 160
         }      
       ]
@@ -57,7 +52,6 @@
           "title": "Selva Branca",
           "artist": "Chiclete com Banana",
           "tonalidade": "C",
-          "filename": "chiclete-com-banana-selva-branca.txt",
           "totalScrollSeconds": 230
         }
       ]
@@ -68,11 +62,10 @@
       "descricao": "Música Popular Brasileira",
       "musicas": [
         {
-          "id": "anunciacao",
+          "id": "alceu-valenca-anunciacao",
           "title": "Anunciação",
           "artist": "Alceu Valença",
           "tonalidade": "F",
-          "filename": "alceu-valenca-anunciacao.txt",
           "totalScrollSeconds": 290
         }        
       ]
