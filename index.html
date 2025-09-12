@@ -21,60 +21,27 @@
         <header class="header">
             <div class="header-content">
                 <h1 class="logo">🎸 Cifras de Violão</h1>
-                <button class="menu-toggle" id="menuToggle" aria-label="Menu" type="button">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
             </div>
         </header>
 
-        <!-- Navegação lateral -->
-        <nav class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h2>Repertórios</h2>
-                <button class="close-menu" id="closeMenu" aria-label="Fechar menu" type="button">×</button>
-            </div>
-            
-            <!-- Lista de repertórios -->
-            <div id="repertoriosContainer" class="repertorios-container">
-                <div class="search-container">
+
+        <!-- Conteúdo principal -->
+        <main class="main-content" id="mainContent">
+            <div class="repertorios-main-screen" id="repertoriosMainScreen">
+                <div class="repertorios-header">
+                    <h1>🎸 Cifras de Violão</h1>
+                    <p>Escolha um repertório para visualizar as músicas disponíveis</p>
+                </div>
+                
+                <div class="repertorios-search-container">
                     <div class="search-row">
                         <input type="text" id="searchInput" placeholder="Buscar repertórios..." class="search-input">
                         <button id="refreshBtn" class="refresh-btn" title="Atualizar repertórios" type="button">🔄</button>
                     </div>
                 </div>
-                <ul id="repertoriosList" class="repertorios-list">
-                    <!-- Lista de repertórios será carregada aqui -->
-                </ul>
-            </div>
-            
-        </nav>
-
-        <!-- Conteúdo principal -->
-        <main class="main-content" id="mainContent">
-            <div class="welcome-screen" id="welcomeScreen">
-                <div class="welcome-content">
-                    <h2>Bem-vindo ao Cifras de Violão!</h2>
-                    <p>Selecione um repertório da lista ao lado para visualizar as músicas disponíveis.</p>
-                    <div class="features">
-                        <div class="feature">
-                            <span class="feature-icon">📱</span>
-                            <span>Responsivo para todos os dispositivos</span>
-                        </div>
-                        <div class="feature">
-                            <span class="feature-icon">🔋</span>
-                            <span>Tela sempre ativa durante a prática</span>
-                        </div>
-                        <div class="feature">
-                            <span class="feature-icon">🎵</span>
-                            <span>Cifras organizadas por repertórios</span>
-                        </div>
-                        <div class="feature">
-                            <span class="feature-icon">🎼</span>
-                            <span>Múltiplos repertórios disponíveis</span>
-                        </div>
-                    </div>
+                
+                <div class="repertorios-grid" id="repertoriosGrid">
+                    <!-- Repertórios serão carregados aqui -->
                 </div>
             </div>
 
@@ -123,8 +90,6 @@
         </main>
     </div>
 
-    <!-- Overlay para mobile -->
-    <div class="overlay" id="overlay"></div>
 
     <script src="script.js"></script>
 </body>

@@ -96,15 +96,6 @@ class CifrasApp {
     }
 
     bindEvents() {
-        // Menu mobile
-        const menuToggle = document.getElementById('menuToggle');
-        const closeMenu = document.getElementById('closeMenu');
-        const overlay = document.getElementById('overlay');
-        const sidebar = document.getElementById('sidebar');
-
-        menuToggle?.addEventListener('click', () => this.toggleSidebar());
-        closeMenu?.addEventListener('click', () => this.toggleSidebar());
-        overlay?.addEventListener('click', () => this.toggleSidebar());
 
         // Busca de repertórios
         const searchInput = document.getElementById('searchInput');
@@ -147,21 +138,12 @@ class CifrasApp {
             }
         });
 
-        // Fechar sidebar ao clicar em uma música (mobile) SEM alternar
-        document.addEventListener('click', (e) => {
-            const item = e.target.closest('.song-item');
-            if (item && window.innerWidth <= 768) {
-                this.closeSidebarIfOpen();
-            }
-        });
 
         // Teclas de atalho
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 if (this.isFullscreen) {
                     this.exitFullscreen();
-                } else if (window.innerWidth <= 768 && sidebar?.classList.contains('open')) {
-                    this.toggleSidebar();
                 }
             } else if (e.key === ' ' && this.currentSong) {
                 // Barra de espaço inicia/pausa auto-scroll
@@ -172,32 +154,24 @@ class CifrasApp {
         });
     }
 
-    closeSidebarIfOpen() {
-        const overlay = document.getElementById('overlay');
-        const sidebar = document.getElementById('sidebar');
-        overlay?.classList.remove('show');
-        sidebar?.classList.remove('open');
-    }
 
     renderRepertorios() {
-        const repertoriosList = document.getElementById('repertoriosList');
-        if (!repertoriosList) return;
+        const repertoriosGrid = document.getElementById('repertoriosGrid');
+        if (!repertoriosGrid) return;
 
-        repertoriosList.innerHTML = this.repertorios.map(repertorio => `
-            <li class="repertorio-item" data-repertorio-id="${repertorio.id}">
-                <span class="repertorio-icon">🎼</span>
-                <div class="repertorio-info">
-                    <div class="repertorio-nome">${repertorio.nome}</div>
-                    <div class="repertorio-descricao">${repertorio.descricao}</div>
+        repertoriosGrid.innerHTML = this.repertorios.map(repertorio => `
+            <div class="repertorio-card" data-repertorio-id="${repertorio.id}">
+                <div class="repertorio-card-icon">🎵</div>
+                <h3 class="repertorio-card-title">${repertorio.nome}</h3>
+                <p class="repertorio-card-description">${repertorio.descricao}</p>
+                <span class="repertorio-card-count">${repertorio.musicas.length} músicas</span>
                 </div>
-                <span class="repertorio-count">${repertorio.musicas.length}</span>
-            </li>
         `).join('');
 
-        // Adicionar eventos de clique
-        repertoriosList.querySelectorAll('.repertorio-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const repertorioId = item.dataset.repertorioId;
+        // Adicionar event listeners
+        repertoriosGrid.querySelectorAll('.repertorio-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const repertorioId = card.dataset.repertorioId;
                 this.selectRepertorio(repertorioId);
             });
         });
@@ -209,16 +183,15 @@ class CifrasApp {
 
         this.currentRepertorio = repertorio;
         this.showSongsInMainContent(repertorio);
-        this.closeSidebar();
     }
 
     showSongsInMainContent(repertorio) {
-        const welcomeScreen = document.getElementById('welcomeScreen');
+        const repertoriosMainScreen = document.getElementById('repertoriosMainScreen');
         const cifraContainer = document.getElementById('cifraContainer');
         const mainContent = document.getElementById('mainContent');
         
-        // Hide welcome screen and cifra container
-        if (welcomeScreen) welcomeScreen.style.display = 'none';
+        // Hide repertórios main screen and cifra container
+        if (repertoriosMainScreen) repertoriosMainScreen.style.display = 'none';
         if (cifraContainer) cifraContainer.style.display = 'none';
         
         // Create or update songs display in main content
@@ -314,11 +287,11 @@ class CifrasApp {
     }
 
     showWelcomeScreen() {
-        const welcomeScreen = document.getElementById('welcomeScreen');
+        const repertoriosMainScreen = document.getElementById('repertoriosMainScreen');
         const cifraContainer = document.getElementById('cifraContainer');
         const songsDisplay = document.getElementById('songsDisplay');
         
-        if (welcomeScreen) welcomeScreen.style.display = 'block';
+        if (repertoriosMainScreen) repertoriosMainScreen.style.display = 'block';
         if (cifraContainer) cifraContainer.style.display = 'none';
         if (songsDisplay) songsDisplay.remove();
     }
@@ -375,15 +348,15 @@ class CifrasApp {
 
 
     filterRepertorios(query) {
-        const repertorioItems = document.querySelectorAll('.repertorio-item');
+        const repertorioCards = document.querySelectorAll('.repertorio-card');
         const searchTerm = query.toLowerCase();
 
-        repertorioItems.forEach(item => {
-            const nome = item.querySelector('.repertorio-nome').textContent.toLowerCase();
-            const descricao = item.querySelector('.repertorio-descricao').textContent.toLowerCase();
+        repertorioCards.forEach(card => {
+            const nome = card.querySelector('.repertorio-card-title').textContent.toLowerCase();
+            const descricao = card.querySelector('.repertorio-card-description').textContent.toLowerCase();
             const matches = nome.includes(searchTerm) || descricao.includes(searchTerm);
             
-            item.style.display = matches ? 'flex' : 'none';
+            card.style.display = matches ? 'block' : 'none';
         });
     }
 
@@ -461,10 +434,6 @@ class CifrasApp {
         const song = this.songs.find(s => s.id === songId);
         if (!song) return;
 
-        // Fechar menu imediatamente em mobile
-        if (window.innerWidth <= 768) {
-            this.closeSidebarIfOpen();
-        }
 
         this.currentSong = song;
         // aplicar configuração persistida antes de iniciar métricas
@@ -558,8 +527,6 @@ class CifrasApp {
         if (welcomeScreen) welcomeScreen.style.display = 'none';
         if (cifraContainer) cifraContainer.style.display = 'block';
 
-        // Garantir que overlay não bloqueie cliques e menu feche
-        this.closeSidebarIfOpen();
     }
 
     showWelcomeScreen() {
@@ -591,15 +558,6 @@ class CifrasApp {
         });
     }
 
-    toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-        
-        if (sidebar && overlay) {
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('show');
-        }
-    }
 
     // =========================
     // Auto Scroll
@@ -1019,15 +977,6 @@ window.addEventListener('orientationchange', () => {
 });
 
 // Detectar mudanças de tamanho da tela
-window.addEventListener('resize', () => {
-    if (window.innerWidth > 768) {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-        
-        if (sidebar) sidebar.classList.remove('open');
-        if (overlay) overlay.classList.remove('show');
-    }
-});
 
 // Detectar quando a página fica visível/invisível
 document.addEventListener('visibilitychange', () => {

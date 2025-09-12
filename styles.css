@@ -254,6 +254,54 @@ body {
     font-weight: 600;
 }
 
+/* Repertório Cards for Main Screen */
+.repertorio-card {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+    padding: 2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.repertorio-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border-color: #3498db;
+}
+
+.repertorio-card-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #3498db;
+}
+
+.repertorio-card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 0.5rem 0;
+}
+
+.repertorio-card-description {
+    color: #666;
+    font-size: 1rem;
+    margin: 0 0 1rem 0;
+    line-height: 1.5;
+}
+
+.repertorio-card-count {
+    background: #3498db;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
 /* Container de músicas */
 .musicas-container {
     flex: 1;
@@ -289,18 +337,49 @@ body {
 /* Main Content */
 .main-content {
     flex: 1;
-    margin-left: 300px;
     padding: 2rem;
     background: white;
     min-height: calc(100vh - 80px);
 }
 
-/* Welcome Screen */
-.welcome-screen {
-    text-align: center;
-    max-width: 600px;
+/* Repertórios Main Screen */
+.repertorios-main-screen {
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+}
+
+.repertorios-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.repertorios-header h1 {
+    color: #2c3e50;
+    margin: 0 0 1rem 0;
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.repertorios-header p {
+    color: #666;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.repertorios-search-container {
+    margin-bottom: 2rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.repertorios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    padding: 0;
 }
 
 .welcome-content h2 {
@@ -866,5 +945,33 @@ body {
     
     .song-card .song-icon {
         font-size: 1.5rem;
+    }
+}
+
+/* Mobile Responsiveness for Repertórios Main Screen */
+@media (max-width: 768px) {
+    .repertorios-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .repertorios-header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .repertorios-header p {
+        font-size: 1.1rem;
+    }
+    
+    .repertorio-card {
+        padding: 1.5rem;
+    }
+    
+    .repertorio-card-icon {
+        font-size: 2.5rem;
+    }
+    
+    .repertorio-card-title {
+        font-size: 1.3rem;
     }
 }
