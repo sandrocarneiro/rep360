@@ -452,10 +452,7 @@ body {
 }
 
 .song-artist {
-    background: #3498db;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
+    color: #666;
     font-size: 0.9rem;
     font-weight: 500;
 }
@@ -903,16 +900,18 @@ body {
 }
 
 .song-card .song-title {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     font-weight: 600;
     color: #2c3e50;
     margin: 0 0 0.5rem 0;
+    line-height: 1.3;
 }
 
 .song-card .song-artist {
-    color: #666;
+    color: #888;
     margin: 0 0 0.5rem 0;
-    font-size: 1rem;
+    font-size: 0.95rem;
+    font-weight: 400;
 }
 
 .song-card .song-tonalidade {
