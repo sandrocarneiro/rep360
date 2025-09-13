@@ -400,8 +400,46 @@ body {
     margin-bottom: 2rem;
     padding-bottom: 1rem;
     border-bottom: 2px solid #e9ecef;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 1rem;
+}
+
+.cifra-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+}
+
+/* Desktop - todos os elementos em uma linha */
+@media (min-width: 769px) {
+    .cifra-header {
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+
+    .cifra-navigation {
+        flex: 0 0 auto;
+        margin-right: 1rem;
+    }
+
+    .cifra-header-content {
+        flex: 1;
+        margin: 0;
+    }
+
+    .song-info {
+        flex: 1;
+        text-align: center;
+    }
+
+    .cifra-controls {
+        flex: 0 0 auto;
+        margin-left: 1rem;
+        display: flex;
+        gap: 0.5rem;
+    }
 }
 
 .song-info {
@@ -574,7 +612,7 @@ body {
     .cifra-content {
         padding: 1rem;
         font-size: 1rem;
-        max-height: 80vh;
+        max-height: 82vh;
     }
 }
 
@@ -631,9 +669,46 @@ body {
         margin-bottom: 1rem;
     }
 
+    .cifra-header-content {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .song-info {
+        flex: 1;
+        text-align: left;
+    }
+
     .song-info h2 {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         margin-bottom: 0.25rem;
+        line-height: 1.2;
+    }
+
+    .song-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .song-artist,
+    .song-tonalidade {
+        font-size: 0.8rem;
+    }
+
+    .cifra-controls {
+        flex-direction: row;
+        gap: 0.25rem;
+        align-items: center;
+    }
+
+    .control-btn {
+        padding: 0.5rem;
+        font-size: 1rem;
+        min-width: 40px;
+        height: 40px;
+        flex: 1;
     }
 
     .cifra-navigation {
