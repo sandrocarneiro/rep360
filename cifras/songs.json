@@ -67,6 +67,13 @@
           "artist": "Alceu Valença",
           "tonalidade": "F",
           "totalScrollSeconds": 280
+        },       
+        {
+          "id": "skank-sutilmente",
+          "title": "Sutilmente",
+          "artist": "Skank",
+          "tonalidade": "D",
+          "totalScrollSeconds": 240
         }
       ]
     }

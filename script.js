@@ -107,6 +107,8 @@ class CifrasApp {
 
         // Botões de controle
         const backButton = document.getElementById('backButton');
+        const previousButton = document.getElementById('previousButton');
+        const nextButton = document.getElementById('nextButton');
         const toggleWakeLock = document.getElementById('toggleWakeLock');
         const toggleFullscreen = document.getElementById('toggleFullscreen');
         const toggleAutoScroll = document.getElementById('toggleAutoScroll');
@@ -114,7 +116,12 @@ class CifrasApp {
         const saveConfigBtn = document.getElementById('saveConfigBtn');
         const resetConfigBtn = document.getElementById('resetConfigBtn');
 
-        backButton?.addEventListener('click', () => this.showWelcomeScreen());
+        backButton?.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.backToCurrentRepertorio();
+        });
+        previousButton?.addEventListener('click', () => this.loadPreviousSong());
+        nextButton?.addEventListener('click', () => this.loadNextSong());
         toggleWakeLock?.addEventListener('click', (e) => { e.preventDefault(); console.log('[click] toggleWakeLock'); this.toggleWakeLock(); });
         toggleFullscreen?.addEventListener('click', (e) => { e.preventDefault(); console.log('[click] toggleFullscreen'); this.toggleFullscreen(); });
         toggleAutoScroll?.addEventListener('click', (e) => { e.preventDefault(); console.log('[click] toggleAutoScroll direct'); this.toggleAutoScroll(); });
@@ -280,6 +287,82 @@ class CifrasApp {
         });
     }
 
+    backToCurrentRepertorio() {
+        // Se há um repertório atual da música, voltar para ele
+        if (this.currentSongRepertorio) {
+            this.showSongsInMainContent(this.currentSongRepertorio);
+        } else {
+            // Caso contrário, voltar para a tela principal
+            this.showWelcomeScreen();
+        }
+        
+        // Desativar Wake Lock ao voltar e parar auto-scroll
+        if (this.wakeLock) {
+            this.releaseWakeLock();
+        }
+        this.stopAutoScroll();
+
+        this.currentSong = null;
+        this.updateActiveSong(null);
+    }
+
+    loadPreviousSong() {
+        if (!this.currentSong || !this.currentSongRepertorio) return;
+
+        const currentIndex = this.currentSongRepertorio.musicas.findIndex(
+            song => song.id === this.currentSong.id
+        );
+
+        if (currentIndex === -1 || currentIndex <= 0) {
+            // Não há música anterior
+            this.showWakeLockNotification('Esta é a primeira música do repertório', 'info');
+            return;
+        }
+
+        const previousSong = this.currentSongRepertorio.musicas[currentIndex - 1];
+        this.loadSong(previousSong.id);
+    }
+
+    loadNextSong() {
+        if (!this.currentSong || !this.currentSongRepertorio) return;
+
+        const currentIndex = this.currentSongRepertorio.musicas.findIndex(
+            song => song.id === this.currentSong.id
+        );
+
+        if (currentIndex === -1 || currentIndex >= this.currentSongRepertorio.musicas.length - 1) {
+            // Não há próxima música
+            this.showWakeLockNotification('Esta é a última música do repertório', 'info');
+            return;
+        }
+
+        const nextSong = this.currentSongRepertorio.musicas[currentIndex + 1];
+        this.loadSong(nextSong.id);
+    }
+
+    updateNavigationButtonsState() {
+        const previousButton = document.getElementById('previousButton');
+        const nextButton = document.getElementById('nextButton');
+        
+        if (!previousButton || !nextButton) return;
+
+        if (!this.currentSong || !this.currentSongRepertorio) {
+            previousButton.disabled = true;
+            nextButton.disabled = true;
+            return;
+        }
+
+        const currentIndex = this.currentSongRepertorio.musicas.findIndex(
+            song => song.id === this.currentSong.id
+        );
+
+        const hasPrevious = currentIndex !== -1 && currentIndex > 0;
+        const hasNext = currentIndex !== -1 && currentIndex < this.currentSongRepertorio.musicas.length - 1;
+        
+        previousButton.disabled = !hasPrevious;
+        nextButton.disabled = !hasNext;
+    }
+
     showWelcomeScreen() {
         const repertoriosMainScreen = document.getElementById('repertoriosMainScreen');
         const cifraContainer = document.getElementById('cifraContainer');
@@ -394,6 +477,15 @@ class CifrasApp {
         const song = this.songs.find(s => s.id === songId);
         if (!song) return;
 
+        // Rastrear o repertório atual baseado no repertório de onde a música foi selecionada
+        if (this.currentRepertorio) {
+            this.currentSongRepertorio = this.currentRepertorio;
+        } else {
+            // Se não há repertório atual, encontrar o primeiro repertório que contém esta música
+            this.currentSongRepertorio = this.repertorios.find(r => 
+                r.musicas.some(m => m.id === songId)
+            );
+        }
 
         this.currentSong = song;
         // aplicar configuração persistida antes de iniciar métricas
@@ -489,26 +581,10 @@ class CifrasApp {
         if (cifraContainer) cifraContainer.style.display = 'block';
         if (songsDisplay) songsDisplay.style.display = 'none';
 
+        // Atualizar estado dos botões de navegação
+        this.updateNavigationButtonsState();
     }
 
-    showWelcomeScreen() {
-        const repertoriosMainScreen = document.getElementById('repertoriosMainScreen');
-        const cifraContainer = document.getElementById('cifraContainer');
-        const songsDisplay = document.getElementById('songsDisplay');
-
-        if (repertoriosMainScreen) repertoriosMainScreen.style.display = 'block';
-        if (cifraContainer) cifraContainer.style.display = 'none';
-        if (songsDisplay) songsDisplay.remove();
-
-        // Desativar Wake Lock ao voltar e parar auto-scroll
-        if (this.wakeLock) {
-            this.releaseWakeLock();
-        }
-        this.stopAutoScroll();
-
-        this.currentSong = null;
-        this.updateActiveSong(null);
-    }
 
     updateActiveSong(songId) {
         document.querySelectorAll('.song-item').forEach(item => {
