@@ -97,15 +97,9 @@ class CifrasApp {
 
     bindEvents() {
 
-        // Busca de repertórios
-        const searchInput = document.getElementById('searchInput');
-        searchInput?.addEventListener('input', (e) => this.filterRepertorios(e.target.value));
 
 
 
-        // Botão de atualizar repertórios
-        const refreshBtn = document.getElementById('refreshBtn');
-        refreshBtn?.addEventListener('click', () => this.refreshRepertorios());
 
         // Botão de atualizar cifra
         const refreshCifra = document.getElementById('refreshCifra');
@@ -297,28 +291,6 @@ class CifrasApp {
     }
 
 
-    async refreshRepertorios() {
-        const refreshBtn = document.getElementById('refreshBtn');
-        if (refreshBtn) {
-            refreshBtn.style.pointerEvents = 'none';
-            refreshBtn.style.opacity = '0.6';
-            refreshBtn.textContent = '⏳';
-        }
-
-        try {
-            await this.loadSongs();
-            this.showWakeLockNotification('Repertórios atualizados!', 'success');
-        } catch (error) {
-            console.error('Erro ao atualizar repertórios:', error);
-            this.showWakeLockNotification('Erro ao atualizar repertórios', 'error');
-        } finally {
-            if (refreshBtn) {
-                refreshBtn.style.pointerEvents = 'auto';
-                refreshBtn.style.opacity = '1';
-                refreshBtn.textContent = '🔄';
-            }
-        }
-    }
 
     async refreshCifra() {
         if (!this.currentSong) return;
@@ -347,18 +319,6 @@ class CifrasApp {
     }
 
 
-    filterRepertorios(query) {
-        const repertorioCards = document.querySelectorAll('.repertorio-card');
-        const searchTerm = query.toLowerCase();
-
-        repertorioCards.forEach(card => {
-            const nome = card.querySelector('.repertorio-card-title').textContent.toLowerCase();
-            const descricao = card.querySelector('.repertorio-card-description').textContent.toLowerCase();
-            const matches = nome.includes(searchTerm) || descricao.includes(searchTerm);
-            
-            card.style.display = matches ? 'block' : 'none';
-        });
-    }
 
 
     toggleConfigPanel() {
@@ -523,9 +483,11 @@ class CifrasApp {
     showCifraContainer() {
         const welcomeScreen = document.getElementById('welcomeScreen');
         const cifraContainer = document.getElementById('cifraContainer');
+        const songsDisplay = document.getElementById('songsDisplay');
 
         if (welcomeScreen) welcomeScreen.style.display = 'none';
         if (cifraContainer) cifraContainer.style.display = 'block';
+        if (songsDisplay) songsDisplay.style.display = 'none';
 
     }
 
