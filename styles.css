@@ -444,6 +444,12 @@ body {
     align-items: center;
 }
 
+.nav-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
 .back-link {
     color: #3498db;
     text-decoration: underline;
@@ -540,6 +546,14 @@ body {
     max-height: 70vh;
 }
 
+@media (max-width: 768px) {
+    .cifra-content {
+        padding: 1rem;
+        font-size: 1rem;
+        max-height: 75vh;
+    }
+}
+
 /* Overlay para mobile */
 .overlay {
     display: none;
@@ -590,6 +604,12 @@ body {
     .cifra-header {
         flex-direction: column;
         align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .song-info h2 {
+        font-size: 1.3rem;
+        margin-bottom: 0.25rem;
     }
 
     .cifra-navigation {
@@ -598,9 +618,21 @@ body {
         width: 100%;
     }
 
+    .cifra-navigation .back-link {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .cifra-navigation .nav-buttons {
+        display: flex;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
     .previous-button,
     .next-button {
-        width: 100%;
+        flex: 1;
         text-align: center;
     }
 
