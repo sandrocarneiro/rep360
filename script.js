@@ -101,15 +101,11 @@ class CifrasApp {
 
 
 
-        // Botão de atualizar cifra
-        const refreshCifra = document.getElementById('refreshCifra');
-        refreshCifra?.addEventListener('click', () => this.refreshCifra());
 
         // Botões de controle
         const backButton = document.getElementById('backButton');
         const previousButton = document.getElementById('previousButton');
         const nextButton = document.getElementById('nextButton');
-        const toggleWakeLock = document.getElementById('toggleWakeLock');
         const toggleFullscreen = document.getElementById('toggleFullscreen');
         const toggleAutoScroll = document.getElementById('toggleAutoScroll');
         const toggleConfig = document.getElementById('toggleConfig');
@@ -122,7 +118,6 @@ class CifrasApp {
         });
         previousButton?.addEventListener('click', () => this.loadPreviousSong());
         nextButton?.addEventListener('click', () => this.loadNextSong());
-        toggleWakeLock?.addEventListener('click', (e) => { e.preventDefault(); console.log('[click] toggleWakeLock'); this.toggleWakeLock(); });
         toggleFullscreen?.addEventListener('click', (e) => { e.preventDefault(); console.log('[click] toggleFullscreen'); this.toggleFullscreen(); });
         toggleAutoScroll?.addEventListener('click', (e) => { e.preventDefault(); console.log('[click] toggleAutoScroll direct'); this.toggleAutoScroll(); });
         toggleConfig?.addEventListener('click', () => this.toggleConfigPanel());
@@ -375,31 +370,6 @@ class CifrasApp {
 
 
 
-    async refreshCifra() {
-        if (!this.currentSong) return;
-
-        const refreshCifra = document.getElementById('refreshCifra');
-        if (refreshCifra) {
-            refreshCifra.style.pointerEvents = 'none';
-            refreshCifra.style.opacity = '0.6';
-            refreshCifra.textContent = '⏳';
-        }
-
-        try {
-            // Recarregar a cifra atual
-            await this.loadSong(this.currentSong.id);
-            this.showWakeLockNotification('Cifra atualizada!', 'success');
-        } catch (error) {
-            console.error('Erro ao atualizar cifra:', error);
-            this.showWakeLockNotification('Erro ao atualizar cifra', 'error');
-        } finally {
-            if (refreshCifra) {
-                refreshCifra.style.pointerEvents = 'auto';
-                refreshCifra.style.opacity = '1';
-                refreshCifra.textContent = '🔄';
-            }
-        }
-    }
 
 
 
@@ -735,20 +705,12 @@ class CifrasApp {
         
         if (!this.wakeLockSupported) {
             console.log('Wake Lock API não suportada neste navegador');
-            const toggleBtn = document.getElementById('toggleWakeLock');
-            if (toggleBtn) {
-                toggleBtn.style.display = 'none';
-            }
             return;
         }
 
         // Verificar se está em HTTPS
         if (location.protocol !== 'https:') {
             console.log('Wake Lock requer HTTPS');
-            const toggleBtn = document.getElementById('toggleWakeLock');
-            if (toggleBtn) {
-                toggleBtn.style.display = 'none';
-            }
             this.wakeLockSupported = false;
             return;
         }
@@ -761,10 +723,6 @@ class CifrasApp {
         } catch (error) {
             console.log('Wake Lock testado mas falhou:', error);
             this.wakeLockSupported = false;
-            const toggleBtn = document.getElementById('toggleWakeLock');
-            if (toggleBtn) {
-                toggleBtn.style.display = 'none';
-            }
         }
     }
 
@@ -788,10 +746,7 @@ class CifrasApp {
             this.wakeLock.addEventListener('release', () => {
                 console.log('Wake Lock liberado pelo sistema');
                 this.wakeLock = null;
-                this.updateWakeLockButton(false);
             });
-
-            this.updateWakeLockButton(true);
             console.log('Wake Lock ativado com sucesso');
             
             // Mostrar notificação de sucesso
@@ -816,7 +771,6 @@ class CifrasApp {
             try {
                 await this.wakeLock.release();
                 this.wakeLock = null;
-                this.updateWakeLockButton(false);
                 console.log('Wake Lock desativado');
             } catch (error) {
                 console.error('Erro ao desativar Wake Lock:', error);
@@ -824,30 +778,6 @@ class CifrasApp {
         }
     }
 
-    async toggleWakeLock() {
-        if (this.wakeLock) {
-            await this.releaseWakeLock();
-        } else {
-            await this.requestWakeLock();
-        }
-    }
-
-    updateWakeLockButton(isActive) {
-        const toggleBtn = document.getElementById('toggleWakeLock');
-        const icon = document.getElementById('wakeLockIcon');
-        
-        if (toggleBtn && icon) {
-            if (isActive) {
-                toggleBtn.classList.add('active');
-                icon.textContent = '🔋';
-                toggleBtn.title = 'Desativar tela sempre ativa';
-            } else {
-                toggleBtn.classList.remove('active');
-                icon.textContent = '🔋';
-                toggleBtn.title = 'Ativar tela sempre ativa';
-            }
-        }
-    }
 
     // Fullscreen API
     async toggleFullscreen() {
@@ -983,7 +913,6 @@ class CifrasApp {
             if (this.wakeLock && this.wakeLock.released) {
                 console.log('Wake Lock foi liberado, tentando reativar...');
                 this.wakeLock = null;
-                this.updateWakeLockButton(false);
                 
                 // Reativar automaticamente se estiver em uma cifra
                 if (this.currentSong) {
@@ -1027,6 +956,5 @@ document.addEventListener('visibilitychange', () => {
 document.addEventListener('wakelockrelease', () => {
     if (window.app) {
         window.app.wakeLock = null;
-        window.app.updateWakeLockButton(false);
     }
 });
