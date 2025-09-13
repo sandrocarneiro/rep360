@@ -450,6 +450,30 @@ body {
     align-items: center;
 }
 
+/* Desktop - textos completos */
+@media (min-width: 769px) {
+    .cifra-navigation .back-link {
+        background: transparent;
+        color: #3498db;
+        text-decoration: underline;
+        padding: 0;
+        border-radius: 0;
+        font-size: 1rem;
+    }
+
+    .cifra-navigation .back-link:hover {
+        background: transparent;
+        color: #2980b9;
+        text-decoration: underline;
+    }
+
+    .previous-button,
+    .next-button {
+        font-size: 1rem;
+        padding: 0.75rem 1.5rem;
+    }
+}
+
 .back-link {
     color: #3498db;
     text-decoration: underline;
@@ -550,7 +574,7 @@ body {
     .cifra-content {
         padding: 1rem;
         font-size: 1rem;
-        max-height: 75vh;
+        max-height: 80vh;
     }
 }
 
@@ -613,27 +637,41 @@ body {
     }
 
     .cifra-navigation {
-        flex-direction: column;
+        flex-direction: row;
         gap: 0.5rem;
         width: 100%;
     }
 
     .cifra-navigation .back-link {
-        width: 100%;
+        flex: 1;
         text-align: center;
-        margin-bottom: 0.5rem;
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        padding: 0.75rem 0.5rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        transition: background-color 0.3s;
+    }
+
+    .cifra-navigation .back-link:hover {
+        background: #5a6268;
+        color: white;
+        text-decoration: none;
     }
 
     .cifra-navigation .nav-buttons {
         display: flex;
         gap: 0.5rem;
-        width: 100%;
+        flex: 2;
     }
 
     .previous-button,
     .next-button {
         flex: 1;
         text-align: center;
+        font-size: 0.9rem;
+        padding: 0.75rem 0.5rem;
     }
 
     .song-details {
