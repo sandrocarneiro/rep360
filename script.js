@@ -18,6 +18,7 @@ class CifrasApp {
             animationFrameId: null,
             detectedLines: 0 // Adicionado para armazenar linhas detectadas
         };
+        this.countdownInterval = null;
         this.repertorios = [];
         this.songs = [];
         
@@ -602,16 +603,49 @@ class CifrasApp {
             scrolledPixels: 0,
             animationFrameId: null
         };
+        
+        // Limpar countdown se estiver ativo
+        if (this.countdownInterval) {
+            clearInterval(this.countdownInterval);
+            this.countdownInterval = null;
+        }
     }
 
     toggleAutoScroll() {
         console.log('[action] toggleAutoScroll called. currentSong?', !!this.currentSong);
         if (!this.currentSong) return;
         if (!this.autoScroll.isActive) {
-            this.startAutoScroll();
+            this.startCountdown();
         } else {
             this.stopAutoScroll();
         }
+    }
+
+    startCountdown() {
+        if (this.countdownInterval) {
+            clearInterval(this.countdownInterval);
+        }
+
+        let countdown = 3;
+        const btn = document.getElementById('toggleAutoScroll');
+        if (!btn) return;
+
+        // Desabilitar botão durante countdown
+        btn.disabled = true;
+        btn.textContent = countdown;
+        btn.title = 'Iniciando em...';
+
+        this.countdownInterval = setInterval(() => {
+            countdown--;
+            if (countdown > 0) {
+                btn.textContent = countdown;
+            } else {
+                clearInterval(this.countdownInterval);
+                this.countdownInterval = null;
+                btn.disabled = false;
+                this.startAutoScroll();
+            }
+        }, 1000);
     }
 
     startAutoScroll() {
@@ -680,6 +714,13 @@ class CifrasApp {
             this.autoScroll.animationFrameId = null;
         }
         this.autoScroll.isActive = false;
+        
+        // Limpar countdown se estiver ativo
+        if (this.countdownInterval) {
+            clearInterval(this.countdownInterval);
+            this.countdownInterval = null;
+        }
+        
         this.updateAutoScrollButton(false);
     }
 
