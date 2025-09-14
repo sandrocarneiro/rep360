@@ -1,11 +1,3 @@
-NÃO OLHE PRA TRÁS
-Capital Inicial
-Tonalidade: G
-
-
-
-
-
 
 
 G  Am7  C
@@ -28,8 +20,6 @@ C                        G4/B
   Se inteligência ficou cega
                  Am7
 De tanta informação
-
-
 G                Am7
   Se não faz sentido
             C
@@ -44,10 +34,7 @@ Escolha uma estrada
 E não olhe, 
              G  Am7  C
 não olhe pra trás
-
-
 ( G  Am7  C  Am7 )
-
 
 G                            Am7
   Você quer encontrar a solução
@@ -57,8 +44,6 @@ G                  Am7
   Insistir em se preocupar demais
 Bm7                      Am7
     Cada escolha é um dilema
-
-
 C                  G4/B
   Como sempre estou   
                          Am7
@@ -67,8 +52,6 @@ C                          G4/B
   Siga em frente em linha reta
                         Am7
 E não procure o que perder
-
-
 G                Am7
   Se não faz sentido
             C
@@ -81,13 +64,13 @@ São águas passadas
 Escolha uma estrada
                            G
 E não olhe, não olhe pra trás
-
-
 [Solo] Am7  C  G
-       Am7  C  G 
-       Am7  C  G 
+
        Am7  C  G 
 
+       Am7  C  G 
+
+       Am7  C  G 
 
 C                  G4/B
   Como sempre estou   
@@ -97,8 +80,6 @@ C                          G4/B
   Siga em frente em linha reta
                         Am7
 E não procure o que perder
-
-
 G                Am7
   Se não faz sentido
             C

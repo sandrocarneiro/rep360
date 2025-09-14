@@ -1,5 +1,7 @@
-B
+
 [Intro]
+B
+
 E
 Veja
 G                            
@@ -44,9 +46,8 @@ A                G
  uma voz que gira
             D D7  A
 Bailando no ar
-
-Solo base: B  A
-
+B  A
+[Solo base] 
 E
 Queira
 G                       

@@ -1,3 +1,4 @@
+
 [Intro] 
 G5  G7M  C7M  G5
 
@@ -23,7 +24,7 @@ Que normalmente, comumente,
 fatalmente, felizmente
        F           
 Displicentemente o nervo 
-   G         C
+   C         G
 se contrai, oh,oh,oh,oh com 
       Am  E
 precisão
